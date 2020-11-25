@@ -12,20 +12,24 @@ class ViewController: UIViewController {
     
     @IBOutlet weak var TextLabel: UILabel!
     
+    @IBOutlet weak var progressBar: UIProgressView!
     
-    let eggTimes: [String: Int] = ["Soft": 300, "Medium": 480, "Hard": 720];
-    var timeLeft: Int = 60
+    let eggTimes: [String: Int] = ["Soft": 5, "Medium": 8, "Hard": 12];
+    var totalTime: Int = 0
+    var secondsPassed: Int = 0;
     var timer = Timer()
     
     @IBAction func hardnessSelected(_ sender: UIButton) {
 //        let hardness = sender.currentTitle!
 //            print(eggTimes[hardness]!)
 //        }
+        TextLabel.text = "How do you like your eggs?"
+        secondsPassed = 0;
         timer.invalidate()
         
         if let hardness = sender.currentTitle {
             if let answer = eggTimes[hardness] {
-                timeLeft = answer
+                totalTime = answer
             }
         }
         timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(startTimer), userInfo: nil, repeats: true)
@@ -33,10 +37,11 @@ class ViewController: UIViewController {
     
     
     @objc func startTimer() {
-        if timeLeft > 0 {
-            print("\(timeLeft) seconds")
-            timeLeft -= 1
+        if secondsPassed != totalTime {
+            secondsPassed += 1
+            progressBar.progress = Float(secondsPassed)/Float(totalTime)
         } else {
+            timer.invalidate()
             TextLabel.text = "Done!"
         }
         
